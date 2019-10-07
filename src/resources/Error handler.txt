@@ -1,0 +1,2 @@
+<span class="headline-intro">Error</span>
+<span class="headline">Artikel kam mit 404 zurück </span>	

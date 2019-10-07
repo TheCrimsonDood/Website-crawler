@@ -6,11 +6,14 @@ import java.util.HashSet;
 
 public class links {
 
-    public static HashSet<String> getLinks() {
+    public static HashSet<String> getInitialWords() {
+        // generiert ein HashSet von Suchwörter
+
+        // ---Variablen ---
         HashSet<String> wordList = new HashSet<String>();
 
-        // generiert ein HashSet von Suchwörter
-        //Leerzeichen müssen mit + ersetzt werden
+        // ---Funktionalität ---
+        // Leerzeichen müssen mit + ersetzt werden
         wordList.add("AFD");
         wordList.add("CDU");
         wordList.add("Grüne");
@@ -28,28 +31,38 @@ public class links {
         return wordList;
     }
 
-    public static URL transformWordToURL(String word) {
-
+    public static URL transformWordToSearchURL(String word, int page) {
         // Transformiert ein Word in eine Spiegel Online such URL
+
+        // --- Variablen ---
         word = word.replace("ü", "%C3%BC");
         word = word.replace("/", "%2F");
-
         URL tempUrl = null;
+
+        // --- Funktionalität ---
         try {
-            tempUrl = new URL("https://www.spiegel.de/suche/?suchbegriff=" + word + "&quellenGroup=SPOX");
+            tempUrl = new URL(
+                    "https://www.spiegel.de/suche/?suchbegriff=" + word + "&quellenGroup=SPOX&pageNumber=" + page);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         return tempUrl;
 
     }
-    public static void main(String[] args0) {
-        String word = "Günther";
-        // Transformiert ein Word in eine Spiegel Online such URL
-        word = word.replace("ü", "%C3%BC");
-        // word.replace("ü", );
-        // word.replace("/", "%2F");
-        System.out.println(word);
+
+    public static URL transformWordToArticleURL(String link) {
+        // Transformiert eine extrahiert teilURL in eine Spiegel Online Artikel URL
+
+        // --- Variablen ---
+        URL tempUrl = null;
+
+        // --- Funktionalität ---
+        try {
+            tempUrl = new URL("https://www.spiegel.de" + link);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return tempUrl;
 
     }
 }
