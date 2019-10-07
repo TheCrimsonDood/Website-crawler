@@ -2,6 +2,7 @@ package src;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -16,7 +17,7 @@ public class utilitys {
 
     public static void createDirectory(String pathString) {
         // Erstellt die Ordnerstruktur an dem angegebenen Pfad
-        
+
         // --- Variablen ---
         Path path = Paths.get(pathString);
 
@@ -48,24 +49,30 @@ public class utilitys {
 
     public static void saveToFile(URL url, String path) {
         // Speichert den Inhalt des Buffered Readers in eine .txt datei
-        
+
         // --- Variablen ---
-        String line;        
+        String line;
         BufferedReader br = crawler.createBR(url);
         String fileTitle = crawler.getHeadline(br);
+        
         br = crawler.createBR(url); // Erneutes erstellen des BR, da er im getHeadLine schon aufgebraucht wurde.
-        String completePath = path + "/" + fileTitle + ".txt";
+        // String completePath = path + "/" + fileTitle + ".txt";
         BufferedWriter bw;
 
         // --- Funktionalität ---
         try {
-            FileWriter writer = new FileWriter(completePath);
+            File file = new File(path, fileTitle + ".txt");
+            if (!file.exists()) {
+            FileWriter writer = new FileWriter(file);
             bw = new BufferedWriter(writer);
-            while ((line = br.readLine()) != null) {
+                while ((line = br.readLine()) != null) {
 
-                bw.write(line);
+                    bw.write(line);
+                }
+                br.close();
+            }else{
+                System.out.println(fileTitle + " existiert bereits");
             }
-            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
