@@ -1,4 +1,4 @@
-package src;
+package src.crawler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
