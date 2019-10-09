@@ -6,13 +6,6 @@
     "configurations": [
         {
             "type": "java",
-            "name": "CodeLens (Launch) - links",
-            "request": "launch",
-            "mainClass": "src.links",
-            "projectName": "SpiegelCrawler_218c2d02"
-        },
-        {
-            "type": "java",
             "name": "CodeLens (Launch) - main",
             "request": "launch",
             "mainClass": "src.main"
