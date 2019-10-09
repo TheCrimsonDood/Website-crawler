@@ -14,20 +14,8 @@ public class links {
 
         // ---Funktionalität ---
         // Leerzeichen müssen mit + ersetzt werden
-        wordList.add("AFD");
-        wordList.add("CDU");
-        wordList.add("Grüne");
-        wordList.add("FDP");
-        wordList.add("SPD");
         wordList.add("Piraten");
-        wordList.add("NPD");
-        wordList.add("Alternative+für+Deutschlands");
-        wordList.add("Christlich+Demokratische+Union");
-        wordList.add("Sozialdemokratische+Partei+Deutschlands");
-        wordList.add("Bündnis+90+DIE+Grünen");
-        wordList.add("Piratenpartei");
-        wordList.add("Nationaldemokratische+Partei+Deutschlands");
-
+       
         return wordList;
     }
 
