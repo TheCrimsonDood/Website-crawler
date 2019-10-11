@@ -14,7 +14,7 @@ public class links {
 
         // ---Funktionalität ---
         // Leerzeichen müssen mit + ersetzt werden
-        wordList.add("Piraten");
+        wordList.add("Piratenpartei");
        
         return wordList;
     }

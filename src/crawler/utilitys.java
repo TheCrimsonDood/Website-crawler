@@ -67,7 +67,7 @@ public class utilitys {
             bw = new BufferedWriter(writer);
                 while ((line = br.readLine()) != null) {
 
-                    bw.write(line);
+                    bw.write(line + "\n");
                 }
                 br.close();
             }else{
