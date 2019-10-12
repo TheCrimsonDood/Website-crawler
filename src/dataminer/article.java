@@ -114,7 +114,7 @@ public class Article {
                     if (line.contains("</p>")) {
                         // Überprüft ob das Ende Element von P alleine in der line steht
                         if (line.indexOf("</p>") > 0) {
-                            endIndex = line.indexOf("</p>") - 1;
+                            endIndex = line.indexOf("</p>");
                         } else {
                             endIndex = 0;
                         }
@@ -130,6 +130,42 @@ public class Article {
 
         }
 
+    }
+
+    void deleteHTMLFromArticle() {
+
+        // ---Variablen---
+        // ---Funktionen---
+        while (containsArticleHTML() == true) {
+            this.article = this.article.replaceAll("<b>", "");
+            this.article = this.article.replaceAll("</b>", "");
+            this.article = this.article.replaceAll("<a.+?(>)", "");
+            this.article = this.article.replaceAll("</a>", "");
+            this.article = this.article.replaceAll("<strong>", "");
+            this.article = this.article.replaceAll("</strong>", "");
+            this.article = this.article.replaceAll("<br />", "");
+        }
+    }
+
+    private boolean containsArticleHTML() {
+        Boolean containsHTML = false;
+
+        if (this.article.contains("<b>")) {
+            containsHTML = true;
+        }else if (this.article.contains("</b>")) {
+            containsHTML = true;
+        }else if (this.article.contains("<a")) {
+            // containsHTML = true;
+        }else if (this.article.contains("</a>")) {
+            containsHTML = true;
+        }else if (this.article.contains("<strong>")) {
+            containsHTML = true;
+        }else if (this.article.contains("</strong>")) {
+            containsHTML = true;
+        } else {
+            containsHTML = false;
+        }
+        return containsHTML;
     }
 
     protected void getDateOutOfArticle(String line) {
