@@ -23,19 +23,21 @@ public class Article {
     String author;// Autor des Artikels
     BufferedReader br;
     FileReader fr;
-    String pfad;
+    String path;
     String article = null;
     String[] articleInWords;
     String[] keywords;
+    String category;
 
     // --Konstruktor--
-    Article(String pfad) throws IOException, ParseException {
-        this.pfad = pfad;
+    Article(String path) throws IOException, ParseException {
+        this.path = path;
         readFile();
         bufferFile();
         getDateOutOfArticle();
         getAuthor();
         getKeywords();
+        getCategory();
         getArticle();
         deleteHTMLFromArticle();
         getDataOutOfArticle();
@@ -54,14 +56,10 @@ public class Article {
 
         // ---Funktionen---
         while ((line = br.readLine()) != null) {
-            lineCount++;
-            if (lineCount == 1180) {
-                System.out.println("stop");
-            }
-            if (line.contains("rel=\"author\">")) {
+            if (line.contains("rel=\"author\">")) {//Überprüft, ob die Struktur für das Beschreiben des Autors in der Zeile auftaucht
                 startIndex = line.indexOf("rel=\"author\">") + 13;
                 endIndex = line.indexOf("</a>");
-                this.author = line.substring(startIndex, endIndex);
+                this.author = line.substring(startIndex, endIndex); 
                 break;
             }
         }
@@ -80,7 +78,7 @@ public class Article {
 
         // ---Funktionen---
         while ((line = br.readLine()) != null) {
-            if (line.contains("<meta name=\"news_keywords\" content=\"")) {
+            if (line.contains("<meta name=\"news_keywords\" content=\"")) {//Überprüft, ob die Struktur für das Beschreiben der Kategorie in der Zeile auftaucht
                 startIndex = line.indexOf("<meta name=\"news_keywords\" content=\"") + 36;
                 endIndex = line.indexOf("\" />");
                 keywordString = line.substring(startIndex, endIndex);
@@ -98,6 +96,27 @@ public class Article {
         countWordsInArticle();
         getWordsOutofArticle();
         System.out.println("stop");
+    }
+
+    private void getCategory() throws IOException {
+        // Ließt die Kategorie, in der der Artikel veröffentlicht wurde
+
+        // ---Variablen---
+        String line;
+        int startIndex;
+        int endIndex;
+
+        // ---Funktionalität---
+        while ((line = br.readLine()) != null) {
+            if (line.contains("\"Rubrik:")) {
+                startIndex = line.indexOf("\"Rubrik:") + 9;
+                endIndex = line.indexOf("\"]");
+                this.category = line.substring(startIndex, endIndex);
+                break;
+            }
+        }
+        readFile();
+        bufferFile();
     }
 
     private void getWordsOutofArticle() {
@@ -216,6 +235,7 @@ public class Article {
             this.article = this.article.replaceAll("<strong>", "");
             this.article = this.article.replaceAll("</strong>", "");
             this.article = this.article.replaceAll("<br />", "");
+            this.article = this.article.replaceAll("<br/>", "");
         }
     }
 
@@ -268,7 +288,7 @@ public class Article {
 
     private void readFile() throws FileNotFoundException {
         // ließt die lokale Datei ein
-        this.fr = new FileReader(this.pfad);
+        this.fr = new FileReader(this.path);
         return;
     }
 
