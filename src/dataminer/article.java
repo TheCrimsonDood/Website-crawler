@@ -23,11 +23,11 @@ public class Article {
     String author;// Autor des Artikels
     BufferedReader br;
     FileReader fr;
-    String path;
-    String article = null;
-    String[] articleInWords;
-    String[] keywords;
-    String category;
+    String path; //Pfad des Artikels
+    String article = null; //Der lesbare Artikel als Plain Text
+    String[] articleInWords; // der gesamte Artikel als Aray in Wörter zerlegt
+    String[] keywords;  //Die Keywords/Tags, mit denen der Artikel von SPIEGEL Online hochgeladen wurde
+    String category; //Die Kategorie (Netzpolitik/Wirtschaft) unter der der Artikel veröffentlicht wurde
 
     // --Konstruktor--
     Article(String path) throws IOException, ParseException {
@@ -138,7 +138,7 @@ public class Article {
 
     private void transformArticleInWords() {
         String article = this.article;
-        article = article.replaceAll("[^a-zA-Z 0-9äöüß]", " ");// Ersetzt alle Satzzeichen mit nichts
+        article = article.replaceAll("[^a-zA-Z 0-9äöüß]", " ");// Ersetzt alle Satzzeichen mit Leerstellen
 
         this.articleInWords = article.split(" ");
     }
