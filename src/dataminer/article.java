@@ -26,6 +26,7 @@ public class Article {
     String pfad;
     String article = null;
     String[] articleInWords;
+    String[] keywords;
 
     // --Konstruktor--
     Article(String pfad) throws IOException, ParseException {
@@ -34,6 +35,7 @@ public class Article {
         bufferFile();
         getDateOutOfArticle();
         getAuthor();
+        getKeywords();
         getArticle();
         deleteHTMLFromArticle();
         getDataOutOfArticle();
@@ -42,6 +44,7 @@ public class Article {
     // --Methoden--
 
     private void getAuthor() throws IOException {
+        // Ließt den Autor des Artikels aus
 
         // ---Variablen---
         int startIndex;
@@ -59,6 +62,29 @@ public class Article {
                 startIndex = line.indexOf("rel=\"author\">") + 13;
                 endIndex = line.indexOf("</a>");
                 this.author = line.substring(startIndex, endIndex);
+                break;
+            }
+        }
+        readFile();
+        bufferFile();
+    }
+
+    private void getKeywords() throws IOException {
+        // Ließt die Tags des Artikels aus
+
+        // ---Variablen---
+        String line;
+        int startIndex;
+        int endIndex;
+        String keywordString;
+
+        // ---Funktionen---
+        while ((line = br.readLine()) != null) {
+            if (line.contains("<meta name=\"news_keywords\" content=\"")) {
+                startIndex = line.indexOf("<meta name=\"news_keywords\" content=\"") + 36;
+                endIndex = line.indexOf("\" />");
+                keywordString = line.substring(startIndex, endIndex);
+                this.keywords = keywordString.split(", ");
                 break;
             }
         }
