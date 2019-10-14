@@ -1,6 +1,7 @@
 package src.dataminer;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 public class Party {
     String name; // Name der Partei
@@ -8,10 +9,8 @@ public class Party {
 
     private static String pfad = "src/data/Piratenpartei/EU-Abgeordnete Julia Reda im Interview Lieber keine Reform als diese.txt";
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParseException {
         Article article = new Article(pfad);
-        article.getArticle();
-        article.deleteHTMLFromArticle();
         System.out.println(article.article);
     }
 }

@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -14,39 +17,39 @@ public class Article {
 
     // --Klassen Variablen--
     int wordCount; // Gesammte Anzahl der Wörter
-    HashMap<String, Integer> exactWordCount; // Jedes Wort wird als Key gespeichert, wohingegen die Anzahl als
+    HashMap<String, Integer> exactWordCount = new HashMap<String, Integer>(); // Jedes Wort wird als Key gespeichert, wohingegen die Anzahl als
                                              // dazugehöiges Value fungiert
     Date date; // Datum des Artikels
     BufferedReader br;
     FileReader fr;
     String pfad;
     String article = null;
+    String[] articleInWords;
 
     // --Konstruktor--
-    Article(String pfad) throws IOException {
+    Article(String pfad) throws IOException, ParseException {
         this.pfad = pfad;
         readFile();
         bufferFile();
-        // getDataOutOfArticle();
+        getDateOutOfArticle();
+        getArticle();
+        deleteHTMLFromArticle();
+        getDataOutOfArticle();
     }
 
     // --Methoden--
-    protected void getDataOutOfArticle() throws IOException {
+    private void getDataOutOfArticle() throws IOException {
         // Analysiert den Artikel nach unterschiedlichen Mußtern
-        String line;
-        while ((line = this.br.readLine()) != null) {
-            getWordsOutofString(line);
-            countWordsInString(line);
-        }
-        bufferFile();
+        transformArticleInWords();
+        countWordsInArticle();
+        getWordsOutofArticle();
+        System.out.println("stop");
     }
 
-    private void getWordsOutofString(String line) {
+    private void getWordsOutofArticle() {
         // Zählt alle Wörter im String und dokumentiert die Anzahl
 
-        String wordsInLine[] = line.split("\\s+"); // Trennt die line anhand der Leerzeichen auf
-        for (String word : wordsInLine) {
-            word = word.replaceAll("[^\\w]", ""); // Ersetzt alle Satzzeichen mit nichts
+        for (String word : this.articleInWords) {
             if (exactWordCount.containsKey(word)) { // Überprüft ob das Wort schonmal eingetragen wurde
                 this.exactWordCount.put(word, exactWordCount.get(word) + 1); // Erhöht die Anzahl um 1
             } else {
@@ -55,12 +58,18 @@ public class Article {
         }
     }
 
-    protected void countWordsInString(String line) {
-        String wordsInLine[] = line.split("\\s+"); // Trennt die Line anhand der Leerzeichen auf
-        this.wordCount = this.wordCount + wordsInLine.length; // fügt die Nummer der wörter zur gesammtzahl hinzu
+    protected void countWordsInArticle() {
+        wordCount = this.articleInWords.length;
     }
 
-    void getArticle() throws IOException {
+    private void transformArticleInWords() {
+        String article = this.article;
+         article= article.replaceAll("[^a-zA-Z 0-9äöüß]", " ");// Ersetzt alle Satzzeichen mit nichts
+
+        this.articleInWords = article.split(" ");
+    }
+
+    private void getArticle() throws IOException {
         // Extrahiert aus dem HTML Source Code den plain Text Artikel
 
         // ---Variablen---
@@ -105,7 +114,7 @@ public class Article {
 
                         } else {// sollte der endtag nicht folgen wird die gesamte Zeile rausgeschrieben
                             endIndex = line.length();
-                            this.article += line.substring(startIndex, endIndex) + "\n";
+                            this.article += line.substring(startIndex, endIndex) + "";
                         }
 
                     }
@@ -130,9 +139,11 @@ public class Article {
 
         }
 
+        br.close();
     }
 
-    void deleteHTMLFromArticle() {
+    private void deleteHTMLFromArticle() {
+        // Löscht HTML aus dem Plain Text Artikel
 
         // ---Variablen---
         // ---Funktionen---
@@ -148,19 +159,20 @@ public class Article {
     }
 
     private boolean containsArticleHTML() {
+        // Überprüft, ob sich noch HTML im Artikel befindet
         Boolean containsHTML = false;
 
         if (this.article.contains("<b>")) {
             containsHTML = true;
-        }else if (this.article.contains("</b>")) {
+        } else if (this.article.contains("</b>")) {
             containsHTML = true;
-        }else if (this.article.contains("<a")) {
+        } else if (this.article.contains("<a")) {
             // containsHTML = true;
-        }else if (this.article.contains("</a>")) {
+        } else if (this.article.contains("</a>")) {
             containsHTML = true;
-        }else if (this.article.contains("<strong>")) {
+        } else if (this.article.contains("<strong>")) {
             containsHTML = true;
-        }else if (this.article.contains("</strong>")) {
+        } else if (this.article.contains("</strong>")) {
             containsHTML = true;
         } else {
             containsHTML = false;
@@ -168,12 +180,24 @@ public class Article {
         return containsHTML;
     }
 
-    protected void getDateOutOfArticle(String line) {
-        if (line.contains("<meta name=\"date\" content=")) {
-            int startIndex = line.indexOf("content=");
-            int endIndex = line.indexOf("/");
+    protected void getDateOutOfArticle() throws IOException, ParseException {
+        // Extrahiert das Datum aus dem HTML Source Code
+        String line;
+        while ((line = br.readLine()) != null) {
+            if (line.contains("<meta name=\"date\" content=")) {//überprüft, ob die Zeile den angegebenen String beinhält, um das Datum zu finden
+                int startIndex = line.indexOf("<meta name=\"date\" content=");//Setzt den startIndex im String
+                int endIndex = line.indexOf("+");//Setzt den endIndex im String
+                String dateTime = line.substring(startIndex+27, endIndex - 1); //Erstellt einen Substring aus line indem sich das Datum befindet
 
-        }
+                String[] date = dateTime.split("T");//Splitted Datum und Zeit anhand des T
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");//Erstellt ein Datumsformat, um die Strings in ein Datum zu Transformieren
+                this.date = sdf.parse(date[0] + " " + date[1]); //Konvertiert die beiden Strings in ein Datum
+                break;
+            }
+            
+        }readFile();
+        bufferFile();
+
     }
 
     private void readFile() throws FileNotFoundException {
