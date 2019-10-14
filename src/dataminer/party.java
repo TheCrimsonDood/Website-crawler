@@ -8,6 +8,7 @@ public class Party {
     int articleCount; // Anzahl der Artikel
 
     private static String pfad = "src/data/Piratenpartei/EU-Abgeordnete Julia Reda im Interview Lieber keine Reform als diese.txt";
+    // private static String pfad = "src/resources/countWordTest.txt";
 
     public static void main(String[] args) throws IOException, ParseException {
         Article article = new Article(pfad);

@@ -1,0 +1,4 @@
+<div class="article-function-box clearfix"><p>Dies ist ein Test um mein Zähl Code zu testen. 
+Dafür benötige ich ein paar wörter, die auch doppelt und dreifach sein dürfen. 
+Ein habe ich jetzt schon ein paar mal geschrieben. Jetzt muss ich nur noch gucken, ob die auch zusammengezählt werden, 
+trotz groß- und kleinschreibung.</p></div>
