@@ -18,8 +18,9 @@ public class Article {
     int wordCount; // Gesammte Anzahl der Wörter
     HashMap<String, Integer> exactWordCount = new HashMap<String, Integer>(); // Jedes Wort wird als Key gespeichert,
                                                                               // wohingegen die Anzahl als
-    // dazugehöiges Value fungiert
+                                                                              // dazugehöiges Value fungiert
     Date date; // Datum des Artikels
+    String author;// Autor des Artikels
     BufferedReader br;
     FileReader fr;
     String pfad;
@@ -32,12 +33,39 @@ public class Article {
         readFile();
         bufferFile();
         getDateOutOfArticle();
+        getAuthor();
         getArticle();
         deleteHTMLFromArticle();
         getDataOutOfArticle();
     }
 
     // --Methoden--
+
+    private void getAuthor() throws IOException {
+
+        // ---Variablen---
+        int startIndex;
+        int endIndex;
+        String line;
+        int lineCount = 0;
+
+        // ---Funktionen---
+        while ((line = br.readLine()) != null) {
+            lineCount++;
+            if (lineCount == 1180) {
+                System.out.println("stop");
+            }
+            if (line.contains("rel=\"author\">")) {
+                startIndex = line.indexOf("rel=\"author\">") + 13;
+                endIndex = line.indexOf("</a>");
+                this.author = line.substring(startIndex, endIndex);
+                break;
+            }
+        }
+        readFile();
+        bufferFile();
+    }
+
     private void getDataOutOfArticle() throws IOException {
         // Analysiert den Artikel nach unterschiedlichen Mußtern
         transformArticleInWords();
@@ -59,7 +87,7 @@ public class Article {
     }
 
     protected void countWordsInArticle() {
-        String[] words =this.article.split(" ");
+        String[] words = this.article.split(" ");
         this.wordCount = words.length;
     }
 
