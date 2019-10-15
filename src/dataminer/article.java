@@ -63,6 +63,10 @@ public class Article {
                 break;
             }
         }
+        //Sollte der Autor nicht bekannt sein, wird er mit unbeknnt gesetzt
+        if(this.author == null){
+            this.author = "Unbekannt";
+        }
         readFile();
         bufferFile();
     }
@@ -95,7 +99,6 @@ public class Article {
         transformArticleInWords();
         countWordsInArticle();
         getWordsOutofArticle();
-        System.out.println("stop");
     }
 
     private void getCategory() throws IOException {
@@ -162,7 +165,6 @@ public class Article {
                 endIndex = line.indexOf("</title>");
 
                 this.article = line.substring(startIndex + 7, endIndex - 17) + "\n";
-                System.out.println(article);
             }
             if (line.contains("<div class=\"article-function-box clearfix\"")) {
                 foundArticle = true;

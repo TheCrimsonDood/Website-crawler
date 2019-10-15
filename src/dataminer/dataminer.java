@@ -3,7 +3,7 @@ package src.dataminer;
 import java.io.*;
 import java.text.ParseException;
 
-public class dataminer {
+public class Dataminer {
 
     public static void main(String[] args0) throws IOException, ParseException {
         
@@ -29,4 +29,13 @@ public class dataminer {
             }
         }
     }
-}
+
+//     public static void main(String[] args0) throws IOException, ParseException {
+
+//         String path = "src/data/";
+//         Party party = new Party("Piratenpartei", path);
+
+//         System.out.println("stop");
+
+//     }
+// }
