@@ -52,7 +52,6 @@ public class Article {
         int startIndex;
         int endIndex;
         String line;
-        int lineCount = 0;
 
         // ---Funktionen---
         while ((line = br.readLine()) != null) {
