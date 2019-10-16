@@ -22,7 +22,8 @@ public class Party {
     HashMap<String, Integer> keywordCount = new HashMap<String, Integer>(); //Zählt die Verwendeten Tags/Keywords diefür die Artikel gesetzt wurden
     HashMap<String, Integer> authorCount = new HashMap<String, Integer>();//Zählt die Anzahlder Artikel pro Autor
     HashMap<String, Integer> exactWordCount = new HashMap<String, Integer>();//Zählt die in Artikeln verwendeten Wörter
-    
+    HashMap<String, HashMap<String,Integer>> allKeywordRelations = new HashMap<String, HashMap<String, Integer>>();
+
 
 
     Party(String party, String path) throws IOException, ParseException {
@@ -50,6 +51,7 @@ public class Party {
                 getCategoryFromArticle((article.category));
                 getWordCountFromArticle(article.exactWordCount);
                 getKeywordsFromArticle(article.keywords);
+                generateKeyWordRelation(article.keywords);
 
             }
         }
@@ -174,6 +176,7 @@ public class Party {
         //Überträgt die Verwendeten Keywords des Artikels in eine HashMap
 
         for(String keyword : keywords){ //Schleife, die alle übergebenen Keywords durchläuft
+            keyword =keyword.toLowerCase(); // ändert die Keywords in ein kleingeschriebenes Format, da die HashMaps Case sensitive sind
             if (this.keywordCount.containsKey(keyword) == true){ //Überprüft, ob die HashMap das Keyword enthält 
                 this.keywordCount.put(keyword, this.keywordCount.get(keyword) + 1); //Wenn ja, wird der Wert um eins erhöht
             }else{
@@ -181,5 +184,35 @@ public class Party {
             }
         }
     }
+    
+    private void generateKeyWordRelation(String[] keywords){
+        //---Variablen---
+        HashMap<String,Integer> tempKeywordList;
+        //---Funktionen---
+
+        for (String keyword: keywords){ //Schleife für alle keywords aus dem Artikel
+            keyword =keyword.toLowerCase(); // ändert die Keywords in ein kleingeschriebenes Format, da die HashMaps Case sensitive sind
+            
+            if (this.allKeywordRelations.containsKey(keyword)){ //Überprüft, ob das Keyword in der gesammten Liste  vohanden ist
+                tempKeywordList = this.allKeywordRelations.get(keyword); //Speichert die HashMap zu dem dazugehörigen Key in eine Temporäre variable aus
+            }else{ //Wird ausgeführt, wenn die gesammte KeywordListe das Schlüssel Keyword nicht enthält
+                tempKeywordList = new HashMap<String,Integer>();
+            }
+
+            for(String keywordToSave: keywords){//Weitere schleife, die durch alle Keywords der Artikel  läuft
+                keywordToSave =keywordToSave.toLowerCase(); // ändert die Keywords in ein kleingeschriebenes Format, da die HashMaps Case sensitive sind
+                
+                if (keywordToSave != keyword){//Überprüft, ob das zu speichernde Keyword ein anderes ist als das Schlüssel Keyword
+                    if (tempKeywordList.containsKey(keywordToSave)){//Überprüft, ob die Temporäre Liste des Schlüssel Keywords das zu speichernde Keyword enthält
+                        tempKeywordList.put(keywordToSave, tempKeywordList.get(keywordToSave) + 1);//Erhöht die Relation des Keywords mit dem Schlüssel Keyword um eins
+                    }else{
+                        tempKeywordList.put(keywordToSave, 1); //Speichert die Relation mit dem Schlüssel Keyword zum ersten mal
+                    }
+                }
+            }
+            allKeywordRelations.put(keyword, tempKeywordList); //Speichert die Temporäre HashMap als Value für das Schlüssel Keyword
+        }
+    }
+
     
 }
