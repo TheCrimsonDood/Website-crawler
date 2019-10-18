@@ -1,3 +1,4 @@
 src/data/
 .vscode/
 .vscode/launch.json
+/src/resources/force-graph-master/
