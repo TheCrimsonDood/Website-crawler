@@ -22,8 +22,8 @@ public class Party {
     HashMap<String, Integer> keywordCount = new HashMap<String, Integer>(); //Zählt die Verwendeten Tags/Keywords diefür die Artikel gesetzt wurden
     HashMap<String, Integer> authorCount = new HashMap<String, Integer>();//Zählt die Anzahlder Artikel pro Autor
     HashMap<String, Integer> exactWordCount = new HashMap<String, Integer>();//Zählt die in Artikeln verwendeten Wörter
-    HashMap<String, HashMap<String,Integer>> allKeywordRelations = new HashMap<String, HashMap<String, Integer>>();
-
+    HashMap<String, HashMap<String,Integer>> allKeywordRelations = new HashMap<String, HashMap<String, Integer>>();//HashMap mit der Anzahl der Keywords, die im selben Artikel gesetzt wurden     
+    HashMap<String,HashMap<String, Integer>> keywordOrigin = new HashMap<String, HashMap<String, Integer>>(); //Ursprung der Keywords anhand der Kategorie in der die Artikelveröffentlicht wurden
 
 
     Party(String party, String path) throws IOException, ParseException {
@@ -51,7 +51,8 @@ public class Party {
                 getCategoryFromArticle((article.category));
                 getWordCountFromArticle(article.exactWordCount);
                 getKeywordsFromArticle(article.keywords);
-                generateKeyWordRelation(article.keywords);
+                generateKeyWordRelation(article.keywords, article.category);
+                generateKeywordOrigin(article.keywords, article.category);
 
             }
         }
@@ -185,7 +186,8 @@ public class Party {
         }
     }
     
-    private void generateKeyWordRelation(String[] keywords){
+    private void generateKeyWordRelation(String[] keywords, String category){
+        //Erstellt eine HashMap in der die Anzahl der Keywords gezählt werde, die mit dem Keyword x gesetzt wurden
         //---Variablen---
         HashMap<String,Integer> tempKeywordList;
         //---Funktionen---
@@ -214,5 +216,26 @@ public class Party {
         }
     }
 
-    
+    private void generateKeywordOrigin(String[] keywords, String category){
+        //erstellt eine Hashmap mit den Keywords und einer Liste mit den Ursprungskategorien der Artikel
+
+        for(String singleKeyword: keywords){
+
+            HashMap<String, Integer> tempHashMap;
+            if (keywordOrigin.containsKey(singleKeyword)){
+                tempHashMap = keywordOrigin.get(singleKeyword);
+            }else{
+                tempHashMap = new HashMap<String, Integer>();
+            }
+
+            if(tempHashMap.containsKey(category)){
+                tempHashMap.put(category, tempHashMap.get(category)+1);
+            }else{
+                tempHashMap.put(category, 1);
+            }
+            keywordOrigin.put(singleKeyword, tempHashMap);
+
+        }
+
+    }
 }
