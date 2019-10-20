@@ -6,9 +6,13 @@ import src.dataminer.Dataminer;;
 
 public class main {
 
-    public static void main (String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException, ParseException {
 
-        Dataminer miner = new Dataminer();
+        try {
+            Dataminer miner = new Dataminer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
