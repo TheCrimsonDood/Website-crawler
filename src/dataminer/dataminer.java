@@ -29,7 +29,7 @@ public class Dataminer {
 
                 String filename = singleFile.getName();// Speichert den Namen der Partei
                 Party party = new Party(filename, path.getPath()); // Erstellt eine neue Partei mit dem Namen des
-                                                                    // Ordners
+                                                                   // Ordners
 
                 System.out.println(filename + " found.");
 
@@ -42,10 +42,10 @@ public class Dataminer {
                 engine.eval(Files.newBufferedReader(Paths.get("src/dataminer/JSONGenerator.js")));
                 Invocable inv = (Invocable) engine;
 
-                String JSONString = (String)inv.invokeFunction("createJSONFile", party.name, party.articleCount, party.categorys,
-                        party.beforeEU, party.afterEU, party.whileEU, party.averageArticleLength, party.releaseMonth,
-                        party.keywordCount, party.authorCount, party.exactWordCount, party.allKeywordRelations,
-                        party.keywordOrigin);
+                String JSONString = (String) inv.invokeFunction("createJSONFile", party.name, party.articleCount,
+                        party.categorys, party.beforeEU, party.afterEU, party.whileEU, party.averageArticleLength,
+                        party.releaseMonth, party.keywordCount, party.authorCount, party.exactWordCount,
+                        party.allKeywordRelations, party.keywordOrigin);
 
                 String absoluteFilePath = "src/data/" + party.name + ".json";
                 File file = new File(absoluteFilePath);
@@ -72,8 +72,10 @@ public class Dataminer {
                 // line = line.replace("\"","");
                 // sb.append(line);
                 // }
-                // JSONString = JSONString.replaceAll(",", ",\n");
-                // JSONString = JSONString.replaceAll("\\\"", "");
+                char a = 123;
+                JSONString = JSONString.replaceAll("=", "\":");
+                JSONString = JSONString.replaceAll(", ", ",\n\t\"");
+                JSONString = JSONString.replaceAll(":\\{", ":\\{\n\t\"");
 
                 // br.close();
                 writer.write(JSONString);
