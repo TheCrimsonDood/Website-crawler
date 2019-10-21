@@ -30,7 +30,7 @@ public class Party {
         // ---Variablen---
         this.name = party;
 
-        File folder = new File(path + name); // Erstellt den Ordnerpfad anhand des Namens des Objektes
+        File folder = new File(path + "/"+name); // Erstellt den Ordnerpfad anhand des Namens des Objektes
         File[] listOfFiles = folder.listFiles(); // Liest alle Datein im Ordner
         int totalLength = 0;// Gesamtlänge aller Artikel
         instanciateReleaseMonth();
