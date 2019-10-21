@@ -1,4 +1,4 @@
-function createJSONFile(partyname, articleCount, category, beforeEU, afterEU, whileEU, averageArticleLength, releaseMonth, keywordCount, authorCount, exactWordCount, allKeywordRealtions, keywordOrigin) {
+function createJSONFile(partyname, articleCount, category, beforeEU, afterEU, whileEU, averageArticleLength, releaseMonth, keywordCount, authorCount, exactWordCount, timeOfRelease) {
 
     // var obj = "{'Partei': '" + partyname + "', 'Anzahl der Artikel': '" + articleCount + "', 'Kategorien': '" + category + "', 'Artikel vor der EU-Wahl':'" + beforeEU + "', 'Artikel nach der EU-Wahl':'" + afterEU + "', 'Artikel während der EU-Wahl':'" + whileEU + "', 'Durchschnittliche Artikellänge in Zeichen':'" + averageArticleLength + "', 'Veröffentlichungen nach Monaten':'" + releaseMonth + "', 'Schlagwortanzhal':'" + keywordCount + "', 'Autoren':'" + authorCount + "', 'Wortanzahlen':'" + exactWordCount + ", 'Schlagwortzusammenhänge':'" + allKeywordRealtions + "', 'KeywordOrigin' : '" + keywordOrigin + "}";
     var obj = "{\n";
@@ -16,7 +16,9 @@ function createJSONFile(partyname, articleCount, category, beforeEU, afterEU, wh
     obj = obj + '\"Veröffentlichungen nach Monaten\":' + releaseMonth + ',\n';
     obj = obj + '\"Schlagwortanzahl":' + keywordCount + ',\n';
     obj = obj + '\"Autoren\":' + authorCount + ',\n';
-    obj = obj + '\"Wortanzahlen\":' + exactWordCount + '\n}';
+    obj = obj + '\"Wortanzahlen\":' + exactWordCount + ',\n';
+    obj = obj + '\"Zeitpunkte der Veröffentlichungen\":' + timeOfRelease + '\n}';
+
 
     // var json = JSON.stringify(obj);
 

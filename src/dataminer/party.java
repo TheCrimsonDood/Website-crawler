@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class Party {
     HashMap<String, Integer> exactWordCount = new HashMap<String, Integer>();//Zählt die in Artikeln verwendeten Wörter
     HashMap<String, HashMap<String,Integer>> allKeywordRelations = new HashMap<String, HashMap<String, Integer>>();//HashMap mit der Anzahl der Keywords, die im selben Artikel gesetzt wurden     
     HashMap<String,HashMap<String, Integer>> keywordOrigin = new HashMap<String, HashMap<String, Integer>>(); //Ursprung der Keywords anhand der Kategorie in der die Artikelveröffentlicht wurden
-
+    ArrayList<String> timeOfRelease = new ArrayList<String>();
 
     Party(String party, String path) throws IOException, ParseException {
         // ---Variablen---
@@ -42,7 +43,7 @@ public class Party {
                                                                        // aus
                 this.articleCount++; // Erhöht die Varaible um 1, da sie die Anzahl der Artikel wiedergibt
                           
-                System.out.println("\t\t\t\t\t---ARTICLE: " + this.articleCount + " initialized!");
+                System.out.println("\t\t\t\t\t---ARTICLE: " + this.articleCount + " initialized!---");
                 
                 totalLength += article.wordCount;
                 getAuthorFromArticle(article.author);// Ließt den Autor aus und speichert Ihn in der Variable
@@ -59,6 +60,34 @@ public class Party {
         this.averageArticleLength = totalLength / this.articleCount;
     }
 
+    private void getTimeOfRelease(int hour, int minute, int second){
+        //Formatiert den Zeitpunkt des Hochladens des Artikel und speichert in in einer ArrayList
+        String hourString;
+        String minuteString;
+        String secondString;
+
+        if (hour < 10){
+            hourString = "0" + Integer.toString(hour);
+        }else{
+            hourString = Integer.toString(hour);
+        }
+        
+        if(minute < 10){
+            minuteString = "0" + Integer.toString(minute);
+        }else{
+            minuteString = Integer.toString(minute);
+        }
+
+        if (second < 10){
+            secondString = "0" + Integer.toString(second);
+        }else{
+            secondString = Integer.toString(second);
+        }
+
+        String time = hourString + ":" + minuteString +":" + secondString + " Uhr";
+        this.timeOfRelease.add(time);
+    }
+
     private void getDateFromArticle(Date date) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -70,6 +99,8 @@ public class Party {
         euEnd.setTime(sdf.parse("2019-05-26 23:59:59"));
         calendar = Calendar.getInstance();// erzeugt ein Objekt calendar mit dem übergebenen Datum
         calendar.setTime(date);
+
+        getTimeOfRelease(calendar.get(calendar.HOUR), calendar.get(calendar.MINUTE), calendar.get(calendar.SECOND));
         // Bestimmt, ob der Artikel vor, nach oder während der EU-Walh erschienen ist
         // und erhöht die entsprechende Variable
         if (euStart.after(calendar) == true) {
@@ -122,8 +153,9 @@ public class Party {
             System.out.println("Error. Monat des Artikels konnte nicht in releaseMonth gesetzt werden");
         }
     }
+    
     private HashMap<String, Integer> evaluateDayOfArticle(Calendar calendar,HashMap<String, Integer> tempMap){
-//Bekommt einen Kalender und eine HashMap übergeben, an der er den Tag des Monats erfässt und in der entsprechenden Stelle in der HashMap erhöht und zurückgibt        
+        //Bekommt einen Kalender und eine HashMap übergeben, an der er den Tag des Monats erfässt und in der entsprechenden Stelle in der HashMap erhöht und zurückgibt        
         
         HashMap<String, Integer> MonthMap = tempMap;
         switch(calendar.get(calendar.DAY_OF_MONTH)){

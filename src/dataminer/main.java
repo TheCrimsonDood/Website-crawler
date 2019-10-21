@@ -9,7 +9,7 @@ public class main {
     public static void main(String[] args) throws IOException, ParseException {
 
         try {
-            Dataminer miner = new Dataminer();
+            new Dataminer();
         } catch (Exception e) {
             e.printStackTrace();
         }

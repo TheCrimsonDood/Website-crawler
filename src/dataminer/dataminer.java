@@ -45,7 +45,7 @@ public class Dataminer {
                 String JSONString = (String) inv.invokeFunction("createJSONFile", party.name, party.articleCount,
                         party.categorys, party.beforeEU, party.afterEU, party.whileEU, party.averageArticleLength,
                         party.releaseMonth, party.keywordCount, party.authorCount, party.exactWordCount,
-                        party.allKeywordRelations, party.keywordOrigin);
+                        party.timeOfRelease);
 
                 String absoluteFilePath = "src/data/" + party.name + ".json";
                 File file = new File(absoluteFilePath);
@@ -64,18 +64,20 @@ public class Dataminer {
                 // BufferedReader br = new BufferedReader(new
                 // FileReader("src/data/"+partyname+".json"));
                 // BufferedReader br = new BufferedReader(new FileReader("src/data/" + partyname
-                // + ".json"));
-                String line = "";
+                // // + ".json"));
+                // String line = "";
                 // StringBuffer sb = new StringBuffer();
                 // while ((line = br.readLine()) != null) {
                 // line = line.replace(",", ",\n");
                 // line = line.replace("\"","");
                 // sb.append(line);
                 // }
-                char a = 123;
                 JSONString = JSONString.replaceAll("=", "\":");
                 JSONString = JSONString.replaceAll(", ", ",\n\t\"");
                 JSONString = JSONString.replaceAll(":\\{", ":\\{\n\t\"");
+                JSONString = JSONString.replaceAll(":\\[", ":\\[\n\t\"");
+                // JSONString = JSONString.replaceAll("\\]", "\\}");
+                JSONString = JSONString.replaceAll("Uhr", "Uhr\"");
 
                 // br.close();
                 writer.write(JSONString);
