@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 
+import javax.swing.filechooser.FileSystemView;
+
 public class main {
 
     static Boolean isDateExceeded;
@@ -17,7 +19,7 @@ public class main {
 
         // --- Variablen ---
         HashSet<String> wordList = links.getInitialWords(); // Ruft die Liste mit den Suchbegriffen auf
-        String pathString = "src\\data"; // Pfad zum anlegen der Ordner
+        String pathString = FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\Website-crawler\\data"; // Pfad zum anlegen der Ordner
         int page = 1; // Startseite zum Suchen, beschreibt die Seite der SpiegelOnlineSuche von der die Artikel gesammelt werden
         isDateExceeded = false; //Variable, um zu bestimmen ob der Artikel älter ist als das angegebene Datum. Dadurch sucht das Programm keine weiteren Artikel
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Beschreibt das Datum nachdem die Artikel verfasst sein müssen.
@@ -46,7 +48,9 @@ public class main {
                 // --- Temporäre Variablen ---
                 HashSet<String> stringLinks = null;
                  URL link = links.transformWordToSearchURL(word, page); // Transformiert das Suchwort in ein SuchLink
-                BufferedReader reader = crawler.createBR(link);// Erstellt einen Stream und lädt den gesamten Sourcecode in den BufferedReader
+                // try{
+                    BufferedReader reader = crawler.createBR(link);// Erstellt einen Stream und lädt den gesamten Sourcecode in den BufferedReader
+                // }catch{                }
                 stringLinks = crawler.getLinksOnPage(reader);// Liest alle Artikel Links aus dem Suchergebnis
                
                 // --- Funktionalität

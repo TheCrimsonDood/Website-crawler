@@ -8,12 +8,13 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import javax.swing.filechooser.FileSystemView;
 
 public class Dataminer {
 
     Dataminer() throws IOException, ParseException, ScriptException, NoSuchMethodException {
 
-        File path = new File("src/data/"); // sets search path for party directories
+        File path = new File(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\Website-crawler\\data"); // sets search path for party directories
         File[] parties = path.listFiles();// Listet alle Datein in path auf
         FileFilter fileFilter = new FileFilter() {
             public boolean accept(File file) {
@@ -47,7 +48,7 @@ public class Dataminer {
                         party.releaseMonth, party.keywordCount, party.authorCount, party.exactWordCount,
                         party.timeOfRelease);
 
-                String absoluteFilePath = "src/data/" + party.name + ".json";
+                String absoluteFilePath = path.getPath()+ party.name + ".json";
                 File file = new File(absoluteFilePath);
 
                 if (file.createNewFile()) {
@@ -56,7 +57,7 @@ public class Dataminer {
                     System.out.println(absoluteFilePath + " already exists.");
                 }
 
-                BufferedWriter writer = new BufferedWriter(new FileWriter("src/data/" + party.name + ".json"));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(path+ party.name + ".json"));
 
                 // writer.write(JSONString);
                 System.out.println("Wrote String into file.");

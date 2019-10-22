@@ -94,7 +94,7 @@ public class crawler {
             try {
                 // Falls die seite nicht mehr existiert, wird eine locale Datei ausgelesen mit
                 // der Nachricht Error
-                FileReader fr = new FileReader("src/resources/Error handler.txt");
+                FileReader fr = new FileReader("resources/Error handler.txt");
                 br = new BufferedReader(fr);
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
