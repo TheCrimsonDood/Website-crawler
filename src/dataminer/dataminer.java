@@ -36,7 +36,7 @@ public class Dataminer {
                 // Erstellt eine neue Partei mit dem Namen des Ordners
                 Party party = new Party(filename, path.getPath());
 
-                System.out.println(filename + " found.");
+                System.out.println("\t\t\t--- " + filename + " completly loaded .");
 
                 // Ruft generateJSON auf und befüllt den String mit einer fertigen JSON datei
                 String JSONString = generateJSON(party);
@@ -68,9 +68,14 @@ public class Dataminer {
         // Erhält eine Partei und schreibt mit den Werten aus dem Objekt einen String im
         // JSON
 
+        System.out.println("\t\t\t\t\t --- starting writing JSON ---");
         String JSONString = "{\n";
+
         JSONString = JSONString + "\t\"Partei\": \"" + party.name + "\",\n";
+        System.out.println("\t\t\t\t\t\t --- finished Name ---");
+
         JSONString = JSONString + "\t\"Anzahl der Artikel\":\"" + party.articleCount + "\",\n";
+        System.out.println("\t\t\t\t\t\t --- finished ArticleCount ---");
 
         JSONString = JSONString + "\t\"Kategorien\":{\n";
         for (Map.Entry<String, Integer> entry : party.categorys.entrySet()) {
@@ -79,12 +84,18 @@ public class Dataminer {
             JSONString = JSONString + "\t\t\"" + key + "\":" + value + ",\n";
         }
         JSONString = JSONString + "\t},\n";
+        System.out.println("\t\t\t\t\t\t --- finished Categorys ---");
 
         JSONString = JSONString + "\t\"Artikel vor der EU-Wahl\":\"" + party.beforeEU + "\",\n";
+        System.out.println("\t\t\t\t\t\t --- finished beforeEU ---");
         JSONString = JSONString + "\t\"Artikel nach der EU-Wahl\":\"" + party.afterEU + "\",\n";
+        System.out.println("\t\t\t\t\t\t --- finished afterEu ---");
+
         JSONString = JSONString + "\t\"Artikel während der EU-Wahl\":\"" + party.whileEU + "\",\n";
-        JSONString = JSONString + "\t\"Durchschnittliche Artikellänge in Zeichen\":\"" + party.averageArticleLength
-                + "\",\n";
+        System.out.println("\t\t\t\t\t\t --- finished whileEU ---");
+
+        JSONString = JSONString + "\t\"Durchschnittliche Artikellänge in Zeichen\":\"" + party.averageArticleLength+ "\",\n";
+        System.out.println("\t\t\t\t\t\t --- finished articleLength ---");
 
         JSONString = JSONString + "\t\"Veröffentlichungen nach Monaten\":{\n";
         for (Map.Entry<String, Month> entry : party.releaseMonth.entrySet()) {
@@ -100,6 +111,8 @@ public class Dataminer {
             JSONString = JSONString + "\t\t},\n";
         }
         JSONString = JSONString + "\t},\n";
+                System.out.println("\t\t\t\t\t\t --- finished releaseMonth ---");
+
 
         JSONString = JSONString + "\t\"Schlagwortanzahl\":{\n";
         for (Map.Entry<String, Integer> entry : party.keywordCount.entrySet()) {
@@ -108,6 +121,8 @@ public class Dataminer {
             JSONString = JSONString + "\t\t\"" + key + "\":" + value + ",\n";
         }
         JSONString = JSONString + "\t},\n";
+                System.out.println("\t\t\t\t\t\t --- finished keywords ---");
+
 
         JSONString = JSONString + "\t\"Autoren\":{\n";
         for (Map.Entry<String, Integer> entry : party.authorCount.entrySet()) {
@@ -116,6 +131,8 @@ public class Dataminer {
             JSONString = JSONString + "\t\t\"" + key + "\":" + value + ",\n";
         }
         JSONString = JSONString + "\t},\n";
+                System.out.println("\t\t\t\t\t\t --- finished authors ---");
+
 
         JSONString = JSONString + "\t\"Wortanzahl\":{\n";
         for (Map.Entry<String, Integer> entry : party.exactWordCount.entrySet()) {
@@ -124,12 +141,16 @@ public class Dataminer {
             JSONString = JSONString + "\t\t\"" + key + "\":" + value + ",\n";
         }
         JSONString = JSONString + "\t},\n";
+                System.out.println("\t\t\t\t\t\t --- finished exactWordCount ---");
+
 
         JSONString = JSONString + "\t\"Zeitpunkte der Veröffentlichungen\":[\n";
         for (String entry : party.timeOfRelease) {
             JSONString = JSONString + "\t\t\"" + entry + "\",\n";
         }
         JSONString = JSONString + "\t]\n";
+                System.out.println("\t\t\t\t\t\t --- finished timeOfRelease ---");
+
         JSONString = JSONString + "}\n";
 
         JSONString = JSONString.replaceAll(",\n\t}", "\n\t}");

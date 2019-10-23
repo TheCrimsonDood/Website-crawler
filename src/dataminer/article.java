@@ -23,11 +23,12 @@ public class Article {
     String author;// Autor des Artikels
     BufferedReader br;
     FileReader fr;
-    String path; //Pfad des Artikels
-    String article = null; //Der lesbare Artikel als Plain Text
+    String path; // Pfad des Artikels
+    String article = null; // Der lesbare Artikel als Plain Text
     String[] articleInWords; // der gesamte Artikel als Aray in Wörter zerlegt
-    String[] keywords;  //Die Keywords/Tags, mit denen der Artikel von SPIEGEL Online hochgeladen wurde
-    String category; //Die Kategorie (Netzpolitik/Wirtschaft) unter der der Artikel veröffentlicht wurde
+    String[] keywords; // Die Keywords/Tags, mit denen der Artikel von SPIEGEL Online hochgeladen wurde
+    String category; // Die Kategorie (Netzpolitik/Wirtschaft) unter der der Artikel veröffentlicht
+                     // wurde
 
     // --Konstruktor--
     Article(String path) throws IOException, ParseException {
@@ -55,15 +56,16 @@ public class Article {
 
         // ---Funktionen---
         while ((line = br.readLine()) != null) {
-            if (line.contains("rel=\"author\">")) {//Überprüft, ob die Struktur für das Beschreiben des Autors in der Zeile auftaucht
+            if (line.contains("rel=\"author\">")) {// Überprüft, ob die Struktur für das Beschreiben des Autors in der
+                                                   // Zeile auftaucht
                 startIndex = line.indexOf("rel=\"author\">") + 13;
                 endIndex = line.indexOf("</a>");
-                this.author = line.substring(startIndex, endIndex); 
+                this.author = line.substring(startIndex, endIndex);
                 break;
             }
         }
-        //Sollte der Autor nicht bekannt sein, wird er mit unbeknnt gesetzt
-        if(this.author == null){
+        // Sollte der Autor nicht bekannt sein, wird er mit unbeknnt gesetzt
+        if (this.author == null) {
             this.author = "Unbekannt";
         }
         readFile();
@@ -81,7 +83,9 @@ public class Article {
 
         // ---Funktionen---
         while ((line = br.readLine()) != null) {
-            if (line.contains("<meta name=\"news_keywords\" content=\"")) {//Überprüft, ob die Struktur für das Beschreiben der Kategorie in der Zeile auftaucht
+            if (line.contains("<meta name=\"news_keywords\" content=\"")) {// Überprüft, ob die Struktur für das
+                                                                           // Beschreiben der Kategorie in der Zeile
+                                                                           // auftaucht
                 startIndex = line.indexOf("<meta name=\"news_keywords\" content=\"") + 36;
                 endIndex = line.indexOf("\" />");
                 keywordString = line.substring(startIndex, endIndex);
@@ -182,13 +186,17 @@ public class Article {
                             startIndex = pIndex + 1;
                             foundP = true;
                         }
+
                         if (line.contains("</p>")) {// Sollte der ende Tag folgen, wird das rausschreiben finalisiert
+                            
                             foundP = false;// wird gesetzt, da der gesamte Text gefunden wurde
                             endIndex = line.indexOf("</p>") - 1;
-                            if (this.article != null) {
-                                this.article += line.substring(startIndex, endIndex) + "\n";
-                            } else {
-                                this.article = line.substring(startIndex, endIndex) + "\n";
+                            if (endIndex > startIndex) {
+                                if (this.article != null) {
+                                    this.article += line.substring(startIndex, endIndex) + "\n";
+                                } else {
+                                    this.article = line.substring(startIndex, endIndex) + "\n";
+                                }
                             }
                         } else {// sollte der endtag nicht folgen wird die gesamte Zeile rausgeschrieben
                             endIndex = line.length();

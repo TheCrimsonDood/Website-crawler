@@ -43,7 +43,7 @@ public class Party {
                                                                        // aus
                 this.articleCount++; // Erhöht die Varaible um 1, da sie die Anzahl der Artikel wiedergibt
                           
-                System.out.println("\t\t\t\t\t---ARTICLE: " + this.articleCount + " initialized!---");
+                System.out.println("\t\t\t\t\t--- " + this.name + " ARTICLE: " + this.articleCount + " initialized!---");
                 
                 totalLength += article.wordCount;
                 getAuthorFromArticle(article.author);// Ließt den Autor aus und speichert Ihn in der Variable

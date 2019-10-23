@@ -19,9 +19,10 @@ public class links {
         // wordList.add("Alternative+für+Deutschland");
         // wordList.add("CDU");
         // wordList.add("Christlich+Demokratische+Union");
-        wordList.add("CSU");
+        // wordList.add("CSU");
         // wordList.add("Christlich+Soziale+Union");
-        // wordList.add("Bündnis+90+/+Die+Grünen");
+        wordList.add("Bündnis+90+Die+Grünen");
+        wordList.add("Bündnis+90");
         // wordList.add("FDP");
         // wordList.add("Freie+Demokratische+Partei");
         // wordList.add("Die+Linke");
