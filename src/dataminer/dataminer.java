@@ -1,6 +1,9 @@
 package src.dataminer;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,21 +38,21 @@ public class Dataminer {
 
                 System.out.println(filename + " found.");
 
-                //Ruft generateJSON auf und befüllt den String mit einer fertigen JSON datei
+                // Ruft generateJSON auf und befüllt den String mit einer fertigen JSON datei
                 String JSONString = generateJSON(party);
 
-                //Erstellt eine Datei mit dem Parteiname innerhalb des My Document Ordner
-                String absoluteFilePath = path.getPath() + "\\" + party.name + ".json";
-                File file = new File(absoluteFilePath);
+                // Erstellt eine Datei mit dem Parteiname innerhalb des My Document Ordner
+                Path absoluteFilePath = Paths.get(path.getPath() + "\\" + "JSON");
+                Files.createDirectories(absoluteFilePath);
+                File jsonFile = new File(absoluteFilePath + "\\" + party.name + ".json");
 
-                if (file.createNewFile()) {
+                if (jsonFile.createNewFile()) {
                     System.out.println(absoluteFilePath + " successfully created.");
                 } else {
                     System.out.println(absoluteFilePath + " already exists.");
                 }
 
-                BufferedWriter writer = new BufferedWriter(
-                        new FileWriter(path.getPath() + "\\" + party.name + ".json"));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile.getPath()));
 
                 System.out.println("Wrote String into file.");
 
@@ -62,7 +65,8 @@ public class Dataminer {
     }
 
     private String generateJSON(Party party) {
-        //Erhält eine Partei und schreibt mit den Werten aus dem Objekt einen String im JSON Format
+        // Erhält eine Partei und schreibt mit den Werten aus dem Objekt einen String im
+        // JSON
 
         String JSONString = "{\n";
         JSONString = JSONString + "\t\"Partei\": \"" + party.name + "\",\n";
@@ -79,7 +83,8 @@ public class Dataminer {
         JSONString = JSONString + "\t\"Artikel vor der EU-Wahl\":\"" + party.beforeEU + "\",\n";
         JSONString = JSONString + "\t\"Artikel nach der EU-Wahl\":\"" + party.afterEU + "\",\n";
         JSONString = JSONString + "\t\"Artikel während der EU-Wahl\":\"" + party.whileEU + "\",\n";
-        JSONString = JSONString + "\t\"Durchschnittliche Artikellänge in Zeichen\":\"" + party.averageArticleLength+ "\",\n";
+        JSONString = JSONString + "\t\"Durchschnittliche Artikellänge in Zeichen\":\"" + party.averageArticleLength
+                + "\",\n";
 
         JSONString = JSONString + "\t\"Veröffentlichungen nach Monaten\":{\n";
         for (Map.Entry<String, Month> entry : party.releaseMonth.entrySet()) {
@@ -128,8 +133,8 @@ public class Dataminer {
         JSONString = JSONString + "}\n";
 
         JSONString = JSONString.replaceAll(",\n\t}", "\n\t}");
-        JSONString = JSONString.replaceAll(",\n\t\t}","\n\t\t}");
-        JSONString = JSONString.replaceAll(",\n\t]","\n\t]");
+        JSONString = JSONString.replaceAll(",\n\t\t}", "\n\t\t}");
+        JSONString = JSONString.replaceAll(",\n\t]", "\n\t]");
 
         return JSONString;
     }
