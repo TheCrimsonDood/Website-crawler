@@ -19,7 +19,7 @@ public class Party {
     int afterEU = 0; // ANzahl der Artikel, die nach der EU-Wahl herausgebracht wurden
     int whileEU = 0; // Anzahl der Artikel, die während der EU-Wahl veröffentlicht wurden
     int averageArticleLength;
-    HashMap<String, HashMap<String, Integer>> releaseMonth = new HashMap<String, HashMap<String,Integer>>(); // Zählt die Anzahl der Artikel pro Monat
+    HashMap<String, Month> releaseMonth = new HashMap<String, Month>(); // Zählt die Anzahl der Artikel pro Monat
     HashMap<String, Integer> keywordCount = new HashMap<String, Integer>(); //Zählt die Verwendeten Tags/Keywords diefür die Artikel gesetzt wurden
     HashMap<String, Integer> authorCount = new HashMap<String, Integer>();//Zählt die Anzahlder Artikel pro Autor
     HashMap<String, Integer> exactWordCount = new HashMap<String, Integer>();//Zählt die in Artikeln verwendeten Wörter
@@ -154,10 +154,10 @@ public class Party {
         }
     }
     
-    private HashMap<String, Integer> evaluateDayOfArticle(Calendar calendar,HashMap<String, Integer> tempMap){
+    private Month evaluateDayOfArticle(Calendar calendar,Month month){
         //Bekommt einen Kalender und eine HashMap übergeben, an der er den Tag des Monats erfässt und in der entsprechenden Stelle in der HashMap erhöht und zurückgibt        
         
-        HashMap<String, Integer> MonthMap = tempMap;
+        HashMap<String, Integer> MonthMap = month.articlePerDay;
         switch(calendar.get(calendar.DAY_OF_MONTH)){
             case(1):{MonthMap.put("1", MonthMap.get("1") + 1);break;}
             case(2):{MonthMap.put("2", MonthMap.get("2") + 1);break;}
@@ -192,56 +192,25 @@ public class Party {
             case(31):{MonthMap.put("31", MonthMap.get("31") + 1);break;}
 
         }
-            return MonthMap;
+            month.articlePerDay = MonthMap;
+            return month;
     }
 
     private void instanciateReleaseMonth() {
         //Initialisiert die Variable releaseMonth mit einen Satz Keys
-        HashMap<String, Integer> tempMap = new HashMap<String, Integer>();
-        tempMap.put("1", 0);
-        tempMap.put("2", 0);
-        tempMap.put("3", 0);
-        tempMap.put("4", 0);
-        tempMap.put("5", 0);
-        tempMap.put("6", 0);
-        tempMap.put("7", 0);
-        tempMap.put("8", 0);
-        tempMap.put("9", 0);
-        tempMap.put("10", 0);
-        tempMap.put("11", 0);
-        tempMap.put("12", 0);
-        tempMap.put("13", 0);
-        tempMap.put("14", 0);
-        tempMap.put("15", 0);
-        tempMap.put("16", 0);
-        tempMap.put("17", 0);
-        tempMap.put("18", 0);
-        tempMap.put("19", 0);
-        tempMap.put("20", 0);
-        tempMap.put("21", 0);
-        tempMap.put("22", 0);
-        tempMap.put("23", 0);
-        tempMap.put("24", 0);
-        tempMap.put("25", 0);
-        tempMap.put("26", 0);
-        tempMap.put("27", 0);
-        tempMap.put("28", 0);
-        tempMap.put("29", 0);
-        tempMap.put("30", 0);
-        tempMap.put("31", 0);
 
-        this.releaseMonth.put("Januar", tempMap);
-        this.releaseMonth.put("Februar", tempMap);
-        this.releaseMonth.put("März", tempMap);
-        this.releaseMonth.put("April", tempMap);
-        this.releaseMonth.put("Mai", tempMap);
-        this.releaseMonth.put("Juni", tempMap);
-        this.releaseMonth.put("Juli", tempMap);
-        this.releaseMonth.put("August", tempMap);
-        this.releaseMonth.put("September", tempMap);
-        this.releaseMonth.put("Oktober", tempMap);
-        this.releaseMonth.put("November", tempMap);
-        this.releaseMonth.put("Dezember", tempMap);
+        this.releaseMonth.put("Januar", new Month("Januar"));
+        this.releaseMonth.put("Februar", new Month("Februar"));
+        this.releaseMonth.put("März", new Month("März"));
+        this.releaseMonth.put("April", new Month("April"));
+        this.releaseMonth.put("Mai", new Month("Mai"));
+        this.releaseMonth.put("Juni", new Month("Juni"));
+        this.releaseMonth.put("Juli", new Month("Juli"));
+        this.releaseMonth.put("August", new Month("August"));
+        this.releaseMonth.put("September", new Month("September"));
+        this.releaseMonth.put("Oktober", new Month("Oktober"));
+        this.releaseMonth.put("November", new Month("November"));
+        this.releaseMonth.put("Dezember", new Month("Dezember"));
     }
 
     private void getAuthorFromArticle(String author) {
