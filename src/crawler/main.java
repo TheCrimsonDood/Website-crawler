@@ -14,6 +14,7 @@ public class main {
 
     static Boolean isDateExceeded;
     static Date earliestDate;
+    static int genericCount =0;
 
     public static void main(String[] args0) {
 
@@ -68,7 +69,6 @@ public class main {
 
                 page++; //geht zur nächsten Seite der Suche auf Spiegel Online weiter
             } while (main.isDateExceeded ==  false);
-
 
             for (URL tempLink : linkList) {
                 utilitys.saveToFile(tempLink, tempPathString); //Speichert den Artikel lokal in dem angegebenen Pfad

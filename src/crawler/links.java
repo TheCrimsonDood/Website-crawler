@@ -21,11 +21,11 @@ public class links {
         // wordList.add("Christlich+Demokratische+Union");
         // wordList.add("CSU");
         // wordList.add("Christlich+Soziale+Union");
-        wordList.add("Bündnis+90+Die+Grünen");
-        wordList.add("Bündnis+90");
+        // wordList.add("Bündnis+90+Die+Grünen");
+        // wordList.add("Bündnis+90");
         // wordList.add("FDP");
         // wordList.add("Freie+Demokratische+Partei");
-        // wordList.add("Die+Linke");
+        // wordList.add("Linke+Partei");
         // wordList.add("NPD");
         // wordList.add("Nationaldemokratische+Partei+Deutschland");
         // wordList.add("Die+Partei");

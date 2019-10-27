@@ -94,14 +94,14 @@ public class crawler {
             try {
                 // Falls die seite nicht mehr existiert, wird eine locale Datei ausgelesen mit
                 // der Nachricht Error
-                FileReader fr = new FileReader("resources/Error handler.txt");
+                FileReader fr = new FileReader("src/resources/Error handler.txt");
                 br = new BufferedReader(fr);
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
             }
             System.out.println("FileNotFoundException");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error while opening Site. Go to next");
         }
 
         return br;
@@ -139,9 +139,13 @@ public class crawler {
                         headline = "ERROR, Artikelheadline fehlerhaft";
                         System.out.println("StringIndexOutOfBoundsException");
                         e.printStackTrace();
-                    }
-                    if (headline == "") {
+                    }catch(NullPointerException e){
                         headline = "ERROR, Artikelheadline nicht gefunden";
+                    }
+
+                    if(headline.contains("Der Tag kompakt") || headline.contains("Die Lage am")){
+                        main.genericCount++;
+                        headline = headline + " " + main.genericCount;
                     }
 
                     headline = headline.replace("\\", "");
@@ -157,6 +161,8 @@ public class crawler {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch(NullPointerException e){
+            
         }
         return headline;
     }

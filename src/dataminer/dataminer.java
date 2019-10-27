@@ -32,6 +32,7 @@ public class Dataminer {
             for (File singleFile : parties) {
 
                 String filename = singleFile.getName();// Speichert den Namen der Partei
+                if(filename == "JSON"){ break;}
 
                 // Erstellt eine neue Partei mit dem Namen des Ordners
                 Party party = new Party(filename, path.getPath());
