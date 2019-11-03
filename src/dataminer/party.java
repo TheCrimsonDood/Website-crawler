@@ -52,7 +52,7 @@ public class Party {
                 getCategoryFromArticle((article.category));
                 getWordCountFromArticle(article.exactWordCount);
                 getKeywordsFromArticle(article.keywords);
-                generateKeyWordRelation(article.keywords, article.category);
+                generateKeyWordRelation(article.keywords);
                 generateKeywordOrigin(article.keywords, article.category);
 
             }
@@ -260,7 +260,7 @@ public class Party {
         }
     }
     
-    private void generateKeyWordRelation(String[] keywords, String category){
+    private void generateKeyWordRelation(String[] keywords){
         //Erstellt eine HashMap in der die Anzahl der Keywords gezählt werde, die mit dem Keyword x gesetzt wurden
         //---Variablen---
         HashMap<String,Integer> tempKeywordList;
