@@ -4,11 +4,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class Party {
 
@@ -152,12 +150,11 @@ public class Party {
         return keywordString;
     }
 
-    private void getDateTimeFromArticle(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+    private void getDateTimeFromArticle(Calendar calendar) {
+        
         getTimeOfRelease(calendar.get(calendar.HOUR_OF_DAY), calendar.get(calendar.MINUTE),
                 calendar.get(calendar.SECOND));
-        this.date = calendar.get(calendar.DAY_OF_MONTH) + "." + (calendar.get(calendar.MONTH) + 1) + "."
+        this.date = calendar.get(calendar.DAY_OF_MONTH) + "." + (calendar.get(calendar.MONTH)) + "."
                 + calendar.get(calendar.YEAR);
     }
 

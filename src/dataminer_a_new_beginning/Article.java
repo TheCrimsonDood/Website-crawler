@@ -5,8 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class Article {
@@ -19,7 +18,7 @@ public class Article {
     HashMap<String, Integer> exactWordCount = new HashMap<String, Integer>(); // Jedes Wort wird als Key gespeichert,
                                                                               // wohingegen die Anzahl als
                                                                               // dazugehöiges Value fungiert
-    Date date; // Datum des Artikels
+    Calendar date = Calendar.getInstance(); // Datum des Artikels
     String author;// Autor des Artikels
     BufferedReader br;
     FileReader fr;
@@ -64,11 +63,11 @@ public class Article {
                 endIndex = line.indexOf("</a>");
                 this.author = line.substring(startIndex, endIndex);
                 break;
-            }else if(line.contains("<p><i>")){
+            } else if (line.contains("<p><i>")) {
 
-                startIndex= line.indexOf("<p><i>") +6;
+                startIndex = line.indexOf("<p><i>") + 6;
                 endIndex = line.indexOf("</i></p>");
-                this.author = line.substring (startIndex, endIndex);
+                this.author = line.substring(startIndex, endIndex);
                 break;
 
             }
@@ -107,7 +106,7 @@ public class Article {
     }
 
     private void doCommentsExist() throws IOException {
-        //checks, if a article has comment function enabled
+        // checks, if a article has comment function enabled
         // --- Variablen ---
         String line;
         this.hasComments = false;
@@ -308,10 +307,9 @@ public class Article {
                                                                                  // indem sich das Datum befindet
 
                 String[] date = dateTime.split("T");// Splitted Datum und Zeit anhand des T
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");// Erstellt ein Datumsformat, um die
-                                                                                   // Strings in ein Datum zu
-                                                                                   // Transformieren
-                this.date = sdf.parse(date[0] + " " + date[1]); // Konvertiert die beiden Strings in ein Datum
+                String[] dateSplit = date[0].split("-");
+                String[] timeSplit = date[1].split(":");
+                this.date.set(Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[1]), Integer.parseInt(dateSplit[2]), Integer.parseInt(timeSplit[0]), Integer.parseInt(timeSplit[1]), Integer.parseInt(timeSplit[2]));// Konvertiert die beiden Strings in ein Datum
                 break;
             }
 
