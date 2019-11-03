@@ -17,7 +17,6 @@ public class Dataminer {
         Files.createDirectories(Paths.get(path + "\\0 CSV"));
         // partyDirectory.getName() != "csv" &&
         for (File partyDirectory : directory.listFiles()) {
-            String test = partyDirectory.getName();
             if (partyDirectory.isDirectory() && !partyDirectory.getName().equals("0 CSV")) {
                 // if (partyDirectory.getName().equals("Piratenpartei")) {
                     new Party(path, partyDirectory.getName());
