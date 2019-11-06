@@ -4,9 +4,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Party {
 
@@ -14,6 +17,30 @@ public class Party {
     private String date;
     ArrayList<String> searchwords = new ArrayList<String>();
     int count = 0;
+    HashMap<String, HashMap<String, Integer>> allKeywordRelations = new HashMap<String, HashMap<String, Integer>>(); // HashMap
+                                                                                                                     // mit
+                                                                                                                     // der
+                                                                                                                     // Anzahl
+                                                                                                                     // der
+                                                                                                                     // Keywords,
+                                                                                                                     // die
+                                                                                                                     // im
+                                                                                                                     // selben
+                                                                                                                     // Artikel
+                                                                                                                     // gesetzt
+                                                                                                                     // wurden
+    HashMap<String, HashMap<String, Integer>> keywordOrigin = new HashMap<String, HashMap<String, Integer>>(); // Ursprung
+                                                                                                               // der
+                                                                                                               // Keywords
+                                                                                                               // anhand
+                                                                                                               // der
+                                                                                                               // Kategorie
+                                                                                                               // in der
+                                                                                                               // die
+                                                                                                               // Artikelveröffentlicht
+                                                                                                               // wurden
+    HashMap<String, Integer> keywordCount = new HashMap<String, Integer>();
+    String nodeJSON = new String();
 
     Party(String mainDirectory, String party) throws IOException, ParseException {
 
@@ -21,12 +48,12 @@ public class Party {
 
         String csvFile = "\"sep=|\"\nNr|Artikel|Datum|Uhrzeit|Autor|Kategorien|Artikellänge|Tags|erlaubt Kommentare";
 
-        for (String searchword : this.searchwords) {// Erweitert die CSV Datei um die Anzahl der Schlagwörter
+        for (String searchword : this.searchwords) { // Erweitert die CSV Datei um die Anzahl der Schlagwörter
             csvFile = csvFile + "|Schlagwort_" + searchword;
         }
         csvFile = csvFile + "\n";
         File partyDirectory = new File(mainDirectory, party);
-        File[] listOfFiles = partyDirectory.listFiles();// Liste aller Dateien innerhalb des Ordners
+        File[] listOfFiles = partyDirectory.listFiles(); // Liste aller Dateien innerhalb des Ordners
         if (listOfFiles.length > 0) {
             for (File file : listOfFiles) {
                 if (file.isFile()) {
@@ -48,8 +75,12 @@ public class Party {
                         csvFile = csvFile + doesArticleCotain(article, searchword) + "|";
                     }
                     csvFile = csvFile + "\n";
-                    System.out.println("\t\t\t\t\t---Wrote " + partyDirectory.getName() + " Article " + count);
-
+                    getKeywordFromArticle(article.keywords);
+                    generateKeyWordRelation(article.keywords);
+                    generateKeywordOrigin(article.keywords, article.category);
+                    if ((count % 50) == 0) {
+                        System.out.println("\t\t\t\t\t---finished " + partyDirectory.getName() + " Article " + count);
+                    }
                 }
 
             }
@@ -105,18 +136,20 @@ public class Party {
         if (article.article.contains(searchword)) { // Überprüft, ob das gesamte suchwort mindestend 1x vorhanden ist
             if (searchword.contains(" ")) { // Überprüft, ob searchword aus einzelnen Wörtern besteht
                 String[] searchwordInWords = searchword.split(" "); // splittet das zu suchende searchword in einzelne
-                                                                    // Worte auf
+                // Worte auf
                 int count = 0; // anzahl der vorkommnisse des zu suchenden
-                for (int j = 0; j <= article.articleInWords.length -1; j++) { // durchläuft den gesamten Artikel Wort für
-                                                                           // Wort
-                    for (int i = 0; i <= searchwordInWords.length -1; i++) {// zählschleife bis zum ende vom zum suchenden
-                        if (!article.articleInWords[j].contains(searchwordInWords[i])) {// überprüft, ob das wort aus
-                                                                                        // dem artikel mit einem der
-                                                                                        // suchwörter übereinstimmt
+                for (int j = 0; j <= article.articleInWords.length - 1; j++) { // durchläuft den gesamten Artikel Wort
+                                                                               // für
+                    // Wort
+                    for (int i = 0; i <= searchwordInWords.length - 1; i++) { // zählschleife bis zum ende vom zum
+                                                                              // suchenden
+                        if (!article.articleInWords[j].contains(searchwordInWords[i])) { // überprüft, ob das wort aus
+                            // dem artikel mit einem der
+                            // suchwörter übereinstimmt
                             break;
-                        } else if (i == searchwordInWords.length-1
+                        } else if (i == searchwordInWords.length - 1
                                 && article.articleInWords[j].contains(searchwordInWords[i])) {
-                            count++;// erhöht die Anzahl der vorkomnisse um 1
+                            count++; // erhöht die Anzahl der vorkomnisse um 1
                             break;
                         } else {
                             j++;
@@ -124,7 +157,7 @@ public class Party {
                     }
                 }
                 return count;
-            } else {// Wird durchlaufen, wenn searchword nur aus einem Wort besteht
+            } else { // Wird durchlaufen, wenn searchword nur aus einem Wort besteht
                 int count = 0;
                 for (String word : article.articleInWords) {
                     if (word.equals(searchword)) {
@@ -151,11 +184,12 @@ public class Party {
     }
 
     private void getDateTimeFromArticle(Calendar calendar) {
-        
+
+        this.date = calendar.get(calendar.DAY_OF_MONTH) + "." + (calendar.get(calendar.MONTH) + 1) + "."
+                + calendar.get(calendar.YEAR);
         getTimeOfRelease(calendar.get(calendar.HOUR_OF_DAY), calendar.get(calendar.MINUTE),
                 calendar.get(calendar.SECOND));
-        this.date = calendar.get(calendar.DAY_OF_MONTH) + "." + (calendar.get(calendar.MONTH)) + "."
-                + calendar.get(calendar.YEAR);
+
     }
 
     private void getTimeOfRelease(int hour, int minute, int second) {
@@ -185,5 +219,88 @@ public class Party {
 
         this.time = hourString + ":" + minuteString + ":" + secondString;
 
+    }
+
+
+    private void generateKeyWordRelation(String[] keywords) {
+        // Erstellt eine HashMap in der die Anzahl der Keywords gezählt werde, die mit
+        // dem Keyword x gesetzt wurden
+        // ---Variablen---
+        HashMap<String, Integer> tempKeywordList;
+        // ---Funktionen---
+
+        for (String keyword : keywords) { // Schleife für alle keywords aus dem Artikel
+            keyword = keyword.toLowerCase(); // ändert die Keywords in ein kleingeschriebenes Format, da die HashMaps
+                                             // Case sensitive sind
+
+            if (this.allKeywordRelations.containsKey(keyword)) { // Überprüft, ob das Keyword in der gesammten Liste
+                                                                 // vohanden ist
+                tempKeywordList = this.allKeywordRelations.get(keyword); // Speichert die HashMap zu dem dazugehörigen
+                                                                         // Key in eine Temporäre variable aus
+            } else { // Wird ausgeführt, wenn die gesammte KeywordListe das Schlüssel Keyword nicht
+                     // enthält
+                tempKeywordList = new HashMap<String, Integer>();
+            }
+
+            for (String keywordToSave : keywords) { // Weitere schleife, die durch alle Keywords der Artikel läuft
+                keywordToSave = keywordToSave.toLowerCase(); // ändert die Keywords in ein kleingeschriebenes Format, da
+                                                             // die HashMaps Case sensitive sind
+
+                if (!keywordToSave.equals(keyword)) { // Überprüft, ob das zu speichernde Keyword ein anderes ist als
+                                                      // das Schlüssel Keyword
+                    if (tempKeywordList.containsKey(keywordToSave)) { // Überprüft, ob die Temporäre Liste des Schlüssel
+                                                                      // Keywords das zu speichernde Keyword enthält
+                        tempKeywordList.put(keywordToSave, tempKeywordList.get(keywordToSave) + 1); // Erhöht die
+                                                                                                    // Relation des
+                                                                                                    // Keywords mit dem
+                                                                                                    // Schlüssel Keyword
+                                                                                                    // um eins
+                    } else {
+                        tempKeywordList.put(keywordToSave, 1); // Speichert die Relation mit dem Schlüssel Keyword zum
+                                                               // ersten mal
+                    }
+                }
+            }
+            allKeywordRelations.put(keyword, tempKeywordList); // Speichert die Temporäre HashMap als Value für das
+                                                               // Schlüssel Keyword
+        }
+    }
+
+    private void generateKeywordOrigin(String[] keywords, String category) {
+        // erstellt eine Hashmap mit den Keywords und einer Liste mit den
+        // Ursprungskategorien der Artikel
+
+        for (String singleKeyword : keywords) {
+
+            HashMap<String, Integer> tempHashMap;
+            if (keywordOrigin.containsKey(singleKeyword)) {
+                tempHashMap = keywordOrigin.get(singleKeyword);
+            } else {
+                tempHashMap = new HashMap<String, Integer>();
+            }
+
+            if (tempHashMap.containsKey(category)) {
+                tempHashMap.put(category, tempHashMap.get(category) + 1);
+            } else {
+                tempHashMap.put(category, 1);
+            }
+            keywordOrigin.put(singleKeyword, tempHashMap);
+
+        }
+
+    }
+
+    private void getKeywordFromArticle(String[] keywords) {
+        // Erstellt eine HasmMap mit allen Keywords und der häufigkeit der Verwendung
+        for (String keyword : keywords) {
+            keyword = keyword.toLowerCase();
+
+            // Überprüft, ob die HashMap das keyword schon beinhält
+            if (this.keywordCount.containsKey(keyword)) {
+                this.keywordCount.put(keyword, this.keywordCount.get(keyword) + 1);
+            } else {
+                this.keywordCount.put(keyword, 1);
+            }
+        }
     }
 }
