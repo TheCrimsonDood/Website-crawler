@@ -8,7 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.swing.filechooser.FileSystemView;
@@ -27,7 +29,7 @@ public class Dataminer {
         for (File partyDirectory : directory.listFiles()) {
             if (partyDirectory.isDirectory() && !partyDirectory.getName().equals("0 CSV")) {
                 if (partyDirectory.getName().equals("FDP") || partyDirectory.getName().equals("Piratenpartei")
-                        || partyDirectory.getName().equals("AFD")) {
+                        || partyDirectory.getName().equals("AFD") || partyDirectory.getName().equals("SPD")) {
                     Party party = new Party(path, partyDirectory.getName());
 
                     allKeywordRelations = generateKeywordRelations(allKeywordRelations, party.allKeywordRelations);
@@ -43,8 +45,8 @@ public class Dataminer {
 
     private static void generateJSON(HashMap<String, Integer> keywordCount,
             HashMap<String, HashMap<String, Integer>> allKeywordRelations, String path) throws IOException {
-String jsonString = "{\n\t\"nodes\": [\n";
-                
+        String jsonString = "{\n\t\"nodes\": [\n";
+
         String nodeString = "";
         int count = 0;
         for (Map.Entry<String, Integer> countEntry : keywordCount.entrySet()) {
@@ -69,6 +71,7 @@ String jsonString = "{\n\t\"nodes\": [\n";
             keywordCounter++;
             count = 0;
             HashMap<String, Integer> tempMap = keywordEntry.getValue();
+            tempMap = getTop10(tempMap);
             for (Map.Entry<String, Integer> relationEntry : tempMap.entrySet()) {
                 count++;
                 linkString = linkString + "\t\t{\n";
@@ -85,14 +88,64 @@ String jsonString = "{\n\t\"nodes\": [\n";
         }
         jsonString += linkString + "\t]\n}";
 
-        Path tempPath = Paths.get(path + "\\0 JSON\\");
+        Path tempPath = Paths.get("src/force-graph/json");
         Files.createDirectories(tempPath);
+
+        File file = new File(tempPath + "/nodes.json");
+        FileWriter writer = new FileWriter(file);
+        BufferedWriter bw = new BufferedWriter(writer);
+        bw.write(jsonString);
+        bw.close();
+    }
+
+    public static HashMap<String, Integer> getTop10(HashMap<String, Integer> tempMap) {
+        HashMap<String, Integer> sortedMap = new HashMap<String, Integer>();
+        int percentage = 10;
+
+        int entryAmount = (int)Math.round((float)tempMap.size() / 100.00 * percentage);
+
+        if (entryAmount < 1){
+            entryAmount= 1;
+        }
+
         
-        File file = new File(path + "\\0 JSON\\" + "nodes" + ".json");
-            FileWriter writer = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(writer);
-            bw.write(jsonString);
-            bw.close();
+        //Schleife, die durch alle Einträge durch die Originale HashMap geht
+        for (Map.Entry<String, Integer> entry : tempMap.entrySet()) {
+
+            //Überprüft, ob die sortierte HashMap größer ist als die zulässige größe
+            if (sortedMap.size() < entryAmount) {
+                sortedMap.put(entry.getKey(), entry.getValue());
+
+            } else {
+                int count = 0;
+                int lowestEntry = 0;
+                for (Map.Entry<String, Integer> singleEntry : sortedMap.entrySet()) {
+
+                    count++;
+
+                    if(count <= entryAmount && lowestEntry > singleEntry.getValue() || lowestEntry == 0){
+                        lowestEntry = singleEntry.getValue();
+                    }
+
+                    if (entry.getValue() > singleEntry.getValue()) {
+                        sortedMap.remove(singleEntry.getKey());
+                        sortedMap.put(entry.getKey(), entry.getValue());
+                        break;
+                    }
+                    if(count >= entryAmount && entry.getValue() == lowestEntry){
+                        sortedMap.put(entry.getKey(), entry.getValue());
+                        break;
+                    }
+                    if(count> entryAmount && singleEntry.getValue() < lowestEntry){
+                        sortedMap.remove(singleEntry.getKey());
+                        break;
+                    }
+                }
+            }
+        }
+
+        return sortedMap;
+
     }
 
     public static HashMap<String, HashMap<String, Integer>> generateKeywordRelations(

@@ -1,5 +1,4 @@
-import ForceGraph from 'force-graph';
-var json;
+const json = pathToMyDocuments + "Website-crawler/data/0 JSON/nodes.json";
 
 var myGraph = ForceGraph();
 myGraph('landkarte')
