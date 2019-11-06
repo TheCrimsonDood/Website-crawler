@@ -33,6 +33,7 @@ public class Article {
     // --Konstruktor--
     Article(String path) throws IOException, ParseException {
         this.path = path;
+        this.date.setLenient(false);
         readFile();
         bufferFile();
         getDateOutOfArticle();
@@ -309,7 +310,7 @@ public class Article {
                 String[] date = dateTime.split("T");// Splitted Datum und Zeit anhand des T
                 String[] dateSplit = date[0].split("-");
                 String[] timeSplit = date[1].split(":");
-                this.date.set(Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[1]), Integer.parseInt(dateSplit[2]), Integer.parseInt(timeSplit[0]), Integer.parseInt(timeSplit[1]), Integer.parseInt(timeSplit[2]));// Konvertiert die beiden Strings in ein Datum
+                this.date.set(Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[1])-1, Integer.parseInt(dateSplit[2]), Integer.parseInt(timeSplit[0]), Integer.parseInt(timeSplit[1]), Integer.parseInt(timeSplit[2]));// Konvertiert die beiden Strings in ein Datum
                 break;
             }
 
