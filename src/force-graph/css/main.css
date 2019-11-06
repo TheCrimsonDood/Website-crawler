@@ -29,12 +29,14 @@
 
 html {
   margin: 0;
+  height: 95%;
   padding: 0;
   background-color: #f4f4f4;
 }
 
 html body {
   width: 80%;
+  height: 100%;
   margin: auto;
   -webkit-box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
           box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
@@ -103,23 +105,20 @@ html body #mainHeader .active .buttonText {
 html body #wrapper {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 1fr 4fr;
-      grid-template-columns: 1fr 4fr;
+  height: inherit;
+  -ms-grid-columns: 1fr 5fr;
+      grid-template-columns: 1fr 5fr;
   margin: 1em 10px;
 }
 
 html body #wrapper #mainArea {
-  margin-left: 1em;
+  margin-left: 0.5em;
   margin-bottom: 1em;
-  height: 30em;
   border: 1px solid #000;
 }
 
-html body #wrapper #mainArea #landkarte {
-  width: 100%;
-}
-
 html body #wrapper #sideArea .member {
+  margin-bottom: 1px;
   border: 1px solid #000;
   text-align: center;
 }

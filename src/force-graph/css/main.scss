@@ -37,11 +37,13 @@ $colors: (back: #f4f4f4, header: #E20074, main:#E20074, button: rgb(160, 160, 16
 //Styling
 html {
     margin: 0;
+    height: 95%;
     padding: 0;
     background-color: colors(back);
-    // overflow: hidden;
+    // overflow: auto;
     body {
         width: 80%;
+        height: 100%;
         margin: auto;
         box-shadow: 0 10px 50px rgba(0, 0, 0, .5);
         #mainHeader {
@@ -85,20 +87,18 @@ html {
         }
         #wrapper {
             display: grid;
-            grid-template-columns: 1fr 4fr;
+            height: inherit;
+            grid-template-columns: 1fr 5fr;
             margin: 1em 10px;
             #mainArea {
                 // background-color: colors(main);
-                margin-left: 1em;
+                margin-left: 0.5em;
                 margin-bottom: 1em;
-                height: 30em;
                 border: 1px solid #000;
-                #landkarte {
-                    width: 100%;
-                }
             }
             #sideArea {
                 .member {
+                    margin-bottom: 1px;
                     border: 1px solid #000;
                     text-align: center;
                     .name {

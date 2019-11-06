@@ -1,0 +1,65 @@
+{
+    "nodes": [{
+        "id": "id1",
+        "name": "id1",
+        "val": 20
+    },{
+        "id": "id2",
+        "name": "id2",
+        "val": 3
+    },{
+        "id": "id3",
+        "name": "id3",
+        "val": 3
+    },{
+        "id": "id4",
+        "name": "id4",
+        "val": 3
+    },{
+        "id": "id5",
+        "name": "id5",
+        "val": 3
+    },{
+        "id": "id6",
+        "name": "id6",
+        "val": 3
+    },{
+        "id": "id7",
+        "name": "id8",
+        "val": 3
+    },{
+        "id": "id8",
+        "name": "id8",
+        "val": 3
+    }],
+    "links": [{
+        "source": "id1",
+        "target": "id2"
+    },{
+        "source": "id1",
+        "target": "id3"
+    },{
+        "source": "id1",
+        "target": "id4"
+    },{
+        "source": "id2",
+        "target": "id3"
+    },{
+        "source": "id2",
+        "target": "id1"
+    },{
+        "source": "id5",
+        "target": "id6"
+    },{
+        "source": "id5",
+        "target": "id6"
+    },{
+        "source": "id5",
+        "target": "id7"
+    },{
+        "source": "id5",
+        "target": "id8"
+    }
+
+    ]
+}
