@@ -42,7 +42,13 @@ public class links {
         // Transformiert ein Word in eine Spiegel Online such URL
 
         // --- Variablen ---
+        word = word.replace("ä", "%C3%A4");
+        word = word.replace("ö", "%C3%B6");
         word = word.replace("ü", "%C3%BC");
+        word = word.replace("Ä", "%C3%84");
+        word = word.replace("Ö", "%C3%96");
+        word = word.replace("Ü", "%C3%9C");
+        word = word.replace("ß", "%C3%9F");
         word = word.replace("/", "%2F");
         URL tempUrl = null;
 
