@@ -271,6 +271,7 @@ public class Party {
         // Ursprungskategorien der Artikel
 
         for (String singleKeyword : keywords) {
+            singleKeyword = singleKeyword.toLowerCase();
 
             HashMap<String, Integer> tempHashMap;
             if (keywordOrigin.containsKey(singleKeyword)) {
