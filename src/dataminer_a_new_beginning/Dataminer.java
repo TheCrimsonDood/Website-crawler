@@ -8,9 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.swing.filechooser.FileSystemView;
@@ -28,91 +26,113 @@ public class Dataminer {
         Files.createDirectories(Paths.get(path + "\\0 CSV"));
         for (File partyDirectory : directory.listFiles()) {
             if (partyDirectory.isDirectory() && !partyDirectory.getName().equals("0 CSV")) {
-                if (partyDirectory.getName().equals("FDP") || partyDirectory.getName().equals("Piratenpartei")
-                        || partyDirectory.getName().equals("AFD") || partyDirectory.getName().equals("SPD")) {
+                if (!partyDirectory.getName().equals("0 JSON")) {
+                    // if (partyDirectory.getName().equals("Piratenpartei")) {
                     Party party = new Party(path, partyDirectory.getName());
 
                     allKeywordRelations = generateKeywordRelations(allKeywordRelations, party.allKeywordRelations);
                     keywordCount = generateKeywordCount(keywordCount, party.keywordCount);
                     keywordOrigin = generateKeywordOrigin(keywordOrigin, party.keywordOrigin);
+                    // }
                 }
             }
         }
-        generateJSON(keywordCount, allKeywordRelations, path);
+        generateNodesCSV(keywordCount, keywordOrigin);
+        generateEdgesCSV(allKeywordRelations);
         System.out.println("Stop");
 
     }
 
-    private static void generateJSON(HashMap<String, Integer> keywordCount,
-            HashMap<String, HashMap<String, Integer>> allKeywordRelations, String path) throws IOException {
-        String jsonString = "{\n\t\"nodes\": [\n";
+    private static void generateNodesCSV(HashMap<String, Integer> keywordCount,
+            HashMap<String, HashMap<String, Integer>> keywordOrigin) throws IOException {
+        // Methode, die eine CSV für den Graphen erstellt mit allen Knoten als Inhalt
 
-        String nodeString = "";
-        int count = 0;
+        // Initialisirung des csvStrings mit den Überschriften
+        String csvString = "Id\tLabel\tCategory\tCount";
+
+        // Schleife, die durch alle Eintragungen in keywordCount geht
         for (Map.Entry<String, Integer> countEntry : keywordCount.entrySet()) {
-            count++;
-            nodeString = nodeString + "\t\t{\n";
-            nodeString = nodeString + "\t\t\t\"id\": \"" + countEntry.getKey() + "\",\n";
-            nodeString = nodeString + "\t\t\t\"name\": \"" + countEntry.getKey() + "\",\n";
-            nodeString = nodeString + "\t\t\t\"val\": " + countEntry.getValue() + "\n";
-            nodeString = nodeString + "\t\t}";
-            if (count != keywordCount.size()) {
-                nodeString += ",\n";
-            } else {
-                nodeString += "\n";
-            }
+            String key = countEntry.getKey(); // key der Eintragung
+            int value = countEntry.getValue(); // value der Eintragung
+
+            // Speichert die entsprechende HashMap der Kategorien, passend zum Key
+            HashMap<String, Integer> tempMap = keywordOrigin.get(key);
+            String highestEntry = getHighestEntry(tempMap);
+
+            csvString += "\n" + key + "\t" + key + "\t" + highestEntry + "\t" + value;
         }
 
-        jsonString += nodeString + "\t],\n\"links\": [\n";
-        count = 0;
-        int keywordCounter = 0;
-        String linkString = "";
-        for (Map.Entry<String, HashMap<String, Integer>> keywordEntry : allKeywordRelations.entrySet()) {
-            keywordCounter++;
-            count = 0;
-            HashMap<String, Integer> tempMap = keywordEntry.getValue();
-            tempMap = getTop10(tempMap);
-            for (Map.Entry<String, Integer> relationEntry : tempMap.entrySet()) {
-                count++;
-                linkString = linkString + "\t\t{\n";
-                linkString = linkString + "\t\t\t\"source\": \"" + keywordEntry.getKey() + "\",\n";
-                linkString = linkString + "\t\t\t\"target\": \"" + relationEntry.getKey() + "\"\n";
-                linkString = linkString + "\t\t}";
-                if (count != tempMap.size() || keywordCounter != allKeywordRelations.size()) {
-                    linkString += ",\n";
-                } else {
-                    linkString += "\n";
-                }
-
-            }
-        }
-        jsonString += linkString + "\t]\n}";
-
-        Path tempPath = Paths.get("src/force-graph/json");
+        Path tempPath = Paths.get(
+                FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\Website-crawler\\data\\0 JSON");
         Files.createDirectories(tempPath);
 
-        File file = new File(tempPath + "/nodes.json");
+        File file = new File(tempPath + "/nodes10All.csv");
         FileWriter writer = new FileWriter(file);
         BufferedWriter bw = new BufferedWriter(writer);
-        bw.write(jsonString);
+        bw.write(csvString);
         bw.close();
+
+    }
+
+    private static void generateEdgesCSV(HashMap<String, HashMap<String, Integer>> keywordRelations)
+            throws IOException {
+        String csvString = "Source\tTarget\tType\tWeight";
+
+        int count = 0;
+        for (Map.Entry<String, HashMap<String, Integer>> relationEntry : keywordRelations.entrySet()) {
+            count++;
+            String key = relationEntry.getKey();
+            HashMap<String, Integer> value = getTop10(relationEntry.getValue());
+
+            for (Map.Entry<String, Integer> entry : value.entrySet()) {
+                String relation = entry.getKey();
+                int weight = entry.getValue();
+                csvString += "\n" + key + "\t" + relation + "\tUndirected\t" + weight;
+            }
+        }
+
+        Path tempPath = Paths.get(
+                FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\Website-crawler\\data\\0 JSON");
+        Files.createDirectories(tempPath);
+
+        File file = new File(tempPath + "/edges10All.csv");
+        FileWriter writer = new FileWriter(file);
+        BufferedWriter bw = new BufferedWriter(writer);
+        bw.write(csvString);
+        bw.close();
+
+    }
+
+    public static String getHighestEntry(HashMap<String, Integer> map) {
+        String highestEntry = "none";
+        int highestValue = 0;
+
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            int value = entry.getValue();
+            if (highestValue < value) {
+                highestValue = value;
+                highestEntry = entry.getKey();
+            } else if (highestValue == value) {
+                highestEntry = "none";
+            }
+        }
+        return highestEntry;
     }
 
     public static HashMap<String, Integer> getTop10(HashMap<String, Integer> tempMap) {
         HashMap<String, Integer> sortedMap = new HashMap<String, Integer>();
         int percentage = 10;
 
-        int entryAmount = (int)Math.round((float)tempMap.size() / 100.00 * percentage);
+        int entryAmount = (int) Math.round((float) tempMap.size() / 100.00 * percentage);
 
-        if (entryAmount < 1){
-            entryAmount= 1;
+        if (entryAmount < 1) {
+            entryAmount = 1;
         }
 
-        
-        //Schleife, die durch alle Einträge durch die Originale HashMap geht
+        // Schleife, die durch alle Einträge durch die Originale HashMap geht
         for (Map.Entry<String, Integer> entry : tempMap.entrySet()) {
 
-            //Überprüft, ob die sortierte HashMap größer ist als die zulässige größe
+            // Überprüft, ob die sortierte HashMap größer ist als die zulässige größe
             if (sortedMap.size() < entryAmount) {
                 sortedMap.put(entry.getKey(), entry.getValue());
 
@@ -123,7 +143,7 @@ public class Dataminer {
 
                     count++;
 
-                    if(count <= entryAmount && lowestEntry > singleEntry.getValue() || lowestEntry == 0){
+                    if (count <= entryAmount && lowestEntry > singleEntry.getValue() || lowestEntry == 0) {
                         lowestEntry = singleEntry.getValue();
                     }
 
@@ -132,11 +152,11 @@ public class Dataminer {
                         sortedMap.put(entry.getKey(), entry.getValue());
                         break;
                     }
-                    if(count >= entryAmount && entry.getValue() == lowestEntry){
+                    if (count >= entryAmount && entry.getValue() == lowestEntry) {
                         sortedMap.put(entry.getKey(), entry.getValue());
                         break;
                     }
-                    if(count> entryAmount && singleEntry.getValue() < lowestEntry){
+                    if (count > entryAmount && singleEntry.getValue() < lowestEntry) {
                         sortedMap.remove(singleEntry.getKey());
                         break;
                     }
